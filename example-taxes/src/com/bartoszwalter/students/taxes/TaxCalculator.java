@@ -1,34 +1,43 @@
 package com.bartoszwalter.students.taxes;
 
+import com.bartoszwalter.students.taxes.contract.PernamentContract;
+import com.bartoszwalter.students.taxes.provision.HealthProvision;
+import com.bartoszwalter.students.taxes.provision.LaborTaxProvision;
+import com.bartoszwalter.students.taxes.provision.SocialProvision;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 
 public class TaxCalculator {
-	
 	public static double podstawa = 0;
 	public static char umowa = ' ';
-	// składki na ubezpieczenia społeczne
-	public static double s_emerytalna = 0; // 9,76% podstawyy
-	public static double s_rentowa = 0; // 1,5% podstawy
-	public static double u_chorobowe = 0; // 2,45% podstawy
+
 	// składki na ubezpieczenia zdrowotne
-	public static double kosztyUzyskania = 111.25; 
-	public static double s_zdrow1 = 0; // od podstawy wymiaru 9%
-	public static double s_zdrow2 = 0; // od podstawy wymiaru 7,75 %
+	public static double kosztyUzyskania = 111.25;
 	public static double zaliczkaNaPod = 0; // zaliczka na podatek dochodowy 18%
 	public static double kwotaZmiejsz = 46.33; // kwota zmienjszająca podatek 46,33 PLN
 	public static double zaliczkaUS = 0;
 	public static double zaliczkaUS0 = 0;
+    private static double s_emerytalna;
+    private static double s_rentowa;
+    private static double u_chorobowe;
+    private static double s_zdrow2;
+    private static double s_zdrow1;
 
-	public static void main(String... args) {
+    public static void main(String... args) {
 		try {
 			InputStreamReader isr = new InputStreamReader(System.in);
 			BufferedReader br = new BufferedReader(isr);
 			
 			System.out.print("Podaj kwotę dochodu: ");	
 			podstawa = Double.parseDouble(br.readLine());
-			
+			System.out.println("POMIDOR");
+            PernamentContract pernamentContract = new PernamentContract(new LaborTaxProvision(), new SocialProvision(), new HealthProvision());
+            pernamentContract.setSalaryPerMonthGross(podstawa);
+            double netto =pernamentContract.calculateNettoSalary();
+			System.out.println("POMIDOR ENDS WITH " + netto + "PLN");
+
 			System.out.print("Typ umowy: (P)raca, (Z)lecenie: ");
 			umowa = br.readLine().charAt(0);
 			
@@ -40,7 +49,7 @@ public class TaxCalculator {
 		
 		DecimalFormat df00 = new DecimalFormat("#.00");
 		DecimalFormat df = new DecimalFormat("#");
-		
+
 		if (umowa == 'P') {
 			System.out.println("UMOWA O PRACĘ");
 			System.out.println("Podstawa wymiaru składek " + podstawa);
